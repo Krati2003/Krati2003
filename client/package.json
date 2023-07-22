@@ -37,5 +37,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://mern-blog-green-six.vercel.app/api"
+  "proxy": "https://mern-blog-green-six.vercel.app/api/"
 }

@@ -9,7 +9,7 @@ const PostSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
-      required: true,
+      required: true, 
     },
     photo: {
       type: String,
@@ -18,10 +18,6 @@ const PostSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-    },
-    categories: {
-      type: Array,
-      required: false,
     },
   },
   { timestamps: true }

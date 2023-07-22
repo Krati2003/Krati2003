@@ -86,10 +86,11 @@
 .singlePostDescInput:focus {
   outline: none;
 }
+
 .singlePostButton {
   width: 100px;
   border: none;
-  background-color: teal;
+  background-color: green;
   padding: 5px;
   color: white;
   border-radius: 5px;

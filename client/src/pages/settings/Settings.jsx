@@ -1,6 +1,5 @@
 import "./settings.css";
-import Sidebar from "../../components/sidebar/Sidebar";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
 
@@ -9,16 +8,34 @@ export default function Settings() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [failure, setFailure] = useState(false);
 
   const { user, dispatch } = useContext(Context);
   const PF = "http://localhost:5000/images/"
 
+  useEffect(() => {
+      setUsername(user.user.username);
+      setEmail(user.user.email)
+      setPassword(user.user.password);
+  }, []);
+
+  const handleDelete = async () => {
+    try{
+      await axios.delete("/users/" + user.user._id, {
+        data: { userId: user.user._id },
+        headers: { authorization: "Bearer "+ user.accessToken}
+      })
+      dispatch({ type: "LOGOUT" });
+      window.location.replace("/login");
+    } catch (err){
+      setFailure(true);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch({ type: "UPDATE_START" });
     const updatedUser = {
-      userId: user._id,
+      userId: user.user._id,
       username,
       email,
       password,
@@ -34,27 +51,44 @@ export default function Settings() {
       } catch (err) {}
     }
     try {
-      const res = await axios.put("/users/" + user._id, updatedUser);
-      setSuccess(true);
-      dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
+      const postsData = await axios.get("/posts?user=" + user.user.username);
+      await axios.put("/users/" + user.user._id, updatedUser, {
+        headers: { authorization: "Bearer "+ user.accessToken}
+      });
+      const posts = postsData.data;
+      posts.map(async (p) => (
+        await axios.put("/posts/" + p._id, {
+          username: username
+        }, {
+          headers: { authorization: "Bearer "+ user.accessToken}
+        })
+      ))
+      dispatch({ type: "LOGOUT" });
+      window.location.replace("/login");
     } catch (err) {
-      dispatch({ type: "UPDATE_FAILURE" });
+      setFailure(true);
     }
   };
   return (
     <div className="settings">
       <div className="settingsWrapper">
         <div className="settingsTitle">
-          <span className="settingsUpdateTitle">Update Your Account</span>
-          <span className="settingsDeleteTitle">Delete Account</span>
+          <span className="settingsUpdateTitle">Update Account</span>
+          <span className="settingsDeleteTitle" onClick={handleDelete}>Delete Account</span>
         </div>
         <form className="settingsForm" onSubmit={handleSubmit}>
           <label>Profile Picture</label>
           <div className="settingsPP">
-            <img
-              src={file ? URL.createObjectURL(file) : PF+user.profilePic}
+          { (user.user.profilePic === "") ? (
+                <img 
+                  src={ file ? URL.createObjectURL(file) : "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} alt="" /> 
+              ): (
+                <img
+              src={file ? URL.createObjectURL(file) : PF+user.user.profilePic}
               alt=""
             />
+              )
+            }
             <label htmlFor="fileInput">
               <i className="settingsPPIcon far fa-user-circle"></i>
             </label>
@@ -68,33 +102,33 @@ export default function Settings() {
           <label>Username</label>
           <input
             type="text"
-            placeholder={user.username}
+            defaultValue={user.user.username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <label>Email</label>
           <input
             type="email"
-            placeholder={user.email}
+            defaultValue={user.user.email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <label>Password</label>
           <input
             type="password"
+            placeholder={"type a new password..."}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="settingsSubmit" type="submit">
             Update
           </button>
-          {success && (
+          {failure && (
             <span
-              style={{ color: "green", textAlign: "center", marginTop: "20px" }}
+              style={{ color: "red", textAlign: "center", marginTop: "20px" }}
             >
-              Profile has been updated...
+              Something went wrong...
             </span>
           )}
         </form>
       </div>
-      <Sidebar />
     </div>
   );
 }

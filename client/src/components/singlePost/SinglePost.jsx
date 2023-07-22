@@ -28,7 +28,8 @@ export default function SinglePost() {
   const handleDelete = async () => {
     try {
       await axios.delete(`/posts/${post._id}`, {
-        data: { username: user.username },
+        data: { username: user.user.username },
+        headers: { authorization: "Bearer "+ user.accessToken}
       });
       window.location.replace("/");
     } catch (err) {}
@@ -37,12 +38,12 @@ export default function SinglePost() {
   const handleUpdate = async () => {
     try {
       await axios.put(`/posts/${post._id}`, {
-        username: user.username,
-        title,
-        desc,
+        username: user.user.username, title, desc
+      }, {
+        headers: { authorization: "Bearer "+ user.accessToken}
       });
       setUpdateMode(false)
-    } catch (err) {}
+    } catch (err) {} 
   };
 
   return (
@@ -62,7 +63,7 @@ export default function SinglePost() {
         ) : (
           <h1 className="singlePostTitle">
             {title}
-            {post.username === user?.username && (
+            {post.username === user?.user.username && (
               <div className="singlePostEdit">
                 <i
                   className="singlePostIcon far fa-edit"

@@ -1,6 +1,24 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Post = require("../models/Post");
+const jwt = require("jsonwebtoken");
+
+function verifyToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if(token == null){
+    return res.status(401).json("You are not authenticated!");
+  }
+
+  jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, user) => {
+    if (err) {
+      return res.status(403).json("Token is inalid!");
+    }
+    req.user = user;
+    next();
+  })
+}
 
 //CREATE POST
 router.post("/", async (req, res) => {
@@ -14,10 +32,10 @@ router.post("/", async (req, res) => {
 });
 
 //UPDATE POST
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (post.username === req.body.username) {
+    if (post.username === req.user.username) {
       try {
         const updatedPost = await Post.findByIdAndUpdate(
           req.params.id,
@@ -39,10 +57,10 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE POST
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (post.username === req.body.username) {
+    if (post.username === req.user.username) {
       try {
         await post.delete();
         res.status(200).json("Post has been deleted...");

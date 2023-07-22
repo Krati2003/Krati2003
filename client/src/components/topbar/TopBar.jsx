@@ -9,7 +9,9 @@ export default function TopBar() {
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
+    window.location.replace("/");
   };
+  
   return (
     <div className="top">
       <div className="topLeft">
@@ -26,19 +28,15 @@ export default function TopBar() {
             </Link>
           </li>
           <li className="topListItem">
-            <Link className="link" to="/">
-              ABOUT
-            </Link>
-          </li>
-          <li className="topListItem">
-            <Link className="link" to="/">
-              CONTACT
-            </Link>
-          </li>
-          <li className="topListItem">
-            <Link className="link" to="/write">
-              WRITE
-            </Link>
+            {user ? (
+              <Link className="link" to="/write">
+                WRITE
+              </Link>
+            ) : (
+              <Link className="link" to="/login">
+                WRITE
+              </Link>
+            )}
           </li>
           <li className="topListItem" onClick={handleLogout}>
             {user && "LOGOUT"}
@@ -48,7 +46,12 @@ export default function TopBar() {
       <div className="topRight">
         {user ? (
           <Link to="/settings">
-            <img className="topImg" src={PF+user.profilePic} alt="" />
+            { (user.user.profilePic === "") ? (
+                <img className="topImg" src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=" alt="" />
+              ): (
+                <img className="topImg" src={PF + user.user.profilePic} alt="" />
+              )
+            }
           </Link>
         ) : (
           <ul className="topList">
@@ -64,7 +67,6 @@ export default function TopBar() {
             </li>
           </ul>
         )}
-        <i className="topSearchIcon fas fa-search"></i>
       </div>
     </div>
   );

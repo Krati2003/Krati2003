@@ -2,9 +2,27 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Post = require("../models/Post");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+function verifyToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if(token == null){
+    return res.status(401).json("You are not authenticated!");
+  }
+
+  jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, user) => {
+    if (err) {
+      return res.status(403).json("Token is inalid!");
+    }
+    req.user = user;
+    next();
+  })
+}
 
 //UPDATE
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   if (req.body.userId === req.params.id) {
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
@@ -28,7 +46,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
       const user = await User.findById(req.params.id);

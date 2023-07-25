@@ -12,7 +12,7 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 dotenv.config(); 
-app.use("/images", express.static(path.join(__dirname, "/images")));
+app.use("/images", express.static("https://mern-blog-green-six.vercel.app/images"));
 mongoose.set("strictQuery", true);
 mongoose
   .connect(process.env.MONGO_URL, {

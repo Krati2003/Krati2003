@@ -3,6 +3,8 @@ import "./write.css";
 import axios from "axios";
 import { Context } from "../../context/Context";
 
+const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+
 export default function Write() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -23,11 +25,11 @@ export default function Write() {
       data.append("file", file);
       newPost.photo = filename;
       try {
-        await axios.post("/upload", data);
+        await axios.post(BASE_URL + "/upload", data);
       } catch (err) {}
     }
     try {
-      const res = await axios.post("/posts", newPost);
+      const res = await axios.post(BASE_URL + "/posts", newPost);
       window.location.replace("/post/" + res.data._id);
     } catch (err) {}
   };

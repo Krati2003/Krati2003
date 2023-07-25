@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./register.css";
 
+const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -13,7 +15,7 @@ export default function Register() {
     e.preventDefault();
     setError(false);
     try {
-      const res = await axios.post("/auth/register", {
+      const res = await axios.post(BASE_URL + "/auth/register", {
         username,
         email,
         password,

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import "./login.css";
 
+const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+
 export default function Login() {
   const userRef = useRef();
   const passwordRef = useRef();
@@ -14,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("/auth/login", {
+      const res = await axios.post(BASE_URL + "/auth/login", {
         username: userRef.current.value,
         password: passwordRef.current.value,
       });

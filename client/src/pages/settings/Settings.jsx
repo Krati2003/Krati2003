@@ -3,6 +3,8 @@ import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
 
+const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+
 export default function Settings() {
   const [file, setFile] = useState(null);
   const [username, setUsername] = useState("");
@@ -11,7 +13,7 @@ export default function Settings() {
   const [failure, setFailure] = useState(false);
 
   const { user, dispatch } = useContext(Context);
-  const PF = "http://localhost:5000/images/"
+  const PF = "https://mern-blog-green-six.vercel.app/images/"
 
   useEffect(() => {
       setUsername(user.user.username);
@@ -21,7 +23,7 @@ export default function Settings() {
 
   const handleDelete = async () => {
     try{
-      await axios.delete("/users/" + user.user._id, {
+      await axios.delete(BASE_URL + "/users/" + user.user._id, {
         data: { userId: user.user._id },
         headers: { authorization: "Bearer "+ user.accessToken}
       })
@@ -47,17 +49,17 @@ export default function Settings() {
       data.append("file", file);
       updatedUser.profilePic = filename;
       try {
-        await axios.post("/upload", data);
+        await axios.post(BASE_URL + "/upload", data);
       } catch (err) {}
     }
     try {
-      const postsData = await axios.get("/posts?user=" + user.user.username);
-      await axios.put("/users/" + user.user._id, updatedUser, {
+      const postsData = await axios.get(BASE_URL + "/posts?user=" + user.user.username);
+      await axios.put(BASE_URL + "/users/" + user.user._id, updatedUser, {
         headers: { authorization: "Bearer "+ user.accessToken}
       });
       const posts = postsData.data;
       posts.map(async (p) => (
-        await axios.put("/posts/" + p._id, {
+        await axios.put(BASE_URL + "/posts/" + p._id, {
           username: username
         }, {
           headers: { authorization: "Bearer "+ user.accessToken}

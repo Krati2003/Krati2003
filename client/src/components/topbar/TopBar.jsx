@@ -5,7 +5,7 @@ import "./topbar.css";
 
 export default function TopBar() {
   const { user, dispatch } = useContext(Context);
-  const PF = "https://mern-blog-green-six.vercel.app/images/"
+  const PF = "https://krati2003-krati2003.vercel.app/images/"
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });

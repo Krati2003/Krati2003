@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./register.css";
 
-const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+const BASE_URL = "https://krati2003-krati2003.vercel.app/api"
 
 export default function Register() {
   const [username, setUsername] = useState("");

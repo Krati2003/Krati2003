@@ -4,8 +4,8 @@ export default function Header() {
   return (
     <div className="header">
       <div className="headerTitles">
-        <span className="headerTitleSm">Discover stories from writers on any topic</span>
-        <span className="headerTitleLg">Stay Curious</span>
+        <span className="headerTitleSm"> Read about On Campus Interview experiences of NIT Agartala </span>
+        <span className="headerTitleLg">NITA Placement Guide</span>
       </div>
       <img
         className="headerImg"

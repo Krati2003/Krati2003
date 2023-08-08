@@ -3,7 +3,7 @@ import "./write.css";
 import axios from "axios";
 import { Context } from "../../context/Context";
 
-const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+const BASE_URL = "https://krati2003-krati2003.vercel.app/api"
 
 export default function Write() {
   const [title, setTitle] = useState("");

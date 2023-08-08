@@ -5,7 +5,7 @@ import "./home.css";
 import axios from "axios";
 import { useLocation } from "react-router";
 
-const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+const BASE_URL = "https://krati2003-krati2003.vercel.app/api"
 
 export default function Home() {
   const [posts, setPosts] = useState([]);

@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
 
-const BASE_URL = "https://mern-blog-green-six.vercel.app/api"
+const BASE_URL = "https://krati2003-krati2003.vercel.app/api"
 
 export default function Settings() {
   const [file, setFile] = useState(null);
@@ -13,7 +13,7 @@ export default function Settings() {
   const [failure, setFailure] = useState(false);
 
   const { user, dispatch } = useContext(Context);
-  const PF = "https://mern-blog-green-six.vercel.app/images/"
+  const PF = "https://krati2003-krati2003.vercel.app/images/"
 
   useEffect(() => {
       setUsername(user.user.username);
